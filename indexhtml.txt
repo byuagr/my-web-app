@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akses Kamera, Galeri, dan Lokasi</title>
+</head>
+<body>
+    <h1>Selamat Datang di Website Kami</h1>
+
+    <h2>Akses Kamera</h2>
+    <video id="video" width="320" height="240" autoplay></video>
+    <button id="capture">Ambil Foto</button>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+
+    <h2>Akses Galeri</h2>
+    <input type="file" id="fileInput" accept="image/*">
+
+    <h2>Lokasi Pengguna</h2>
+    <button id="getLocation">Dapatkan Lokasi</button>
+    <p id="location"></p>
+
+    <script>
+        // Akses Kamera
+        const video = document.getElementById('video');
+        navigator.mediaDevices.getUser Media({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            });
+
+        document.getElementById('capture').addEventListener('click', () => {
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        });
+
+        // Akses Galeri
+        document.getElementById('fileInput').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            document.body.appendChild(img);
+        });
+
+        // Dapatkan Lokasi
+        document.getElementById('getLocation').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    document.getElementById('location').innerText = `Latitude: ${lat}, Longitude: ${lon}`;
+                });
+            } else {
+                document.getElementById('location').innerText = "Geolocation tidak didukung oleh browser ini.";
+            }
+        });
+    </script>
+</body>
+</html>
